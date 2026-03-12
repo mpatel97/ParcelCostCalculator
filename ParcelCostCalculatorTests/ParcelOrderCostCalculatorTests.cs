@@ -32,13 +32,13 @@ public class ParcelOrderCostCalculatorTests
     }
 
     [Fact]
-    public void CalculateTotalOrderCost_EmptyParcelList_ShouldReturnTotalOrderCostOfZero()
+    public void CalculateParcelOrder_EmptyParcelList_ShouldReturnTotalOrderCostOfZero()
     {
         // Arrange
         var parcels = new List<Parcel>();
 
         // Act
-        var parcelOrderCost = _sut.CalculateTotalOrderCost(parcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcels);
 
         // Assert
         Assert.NotNull(parcelOrderCost);
@@ -46,7 +46,7 @@ public class ParcelOrderCostCalculatorTests
     }
 
     [Fact]
-    public void CalculateTotalOrderCost_SingleItemParcelList_ShouldReturnTotalOrderCostEquivalentToSingleItemCost()
+    public void CalculateParcelOrder_SingleItemParcelList_ShouldReturnTotalOrderCostEquivalentToSingleItemCost()
     {
         // Arrange
         var smallParcel = TestData.ParcelCostMappingTestData[ParcelTypeEnum.Small];
@@ -55,7 +55,7 @@ public class ParcelOrderCostCalculatorTests
         var costCalculatedSmallParcel = _parcelPricingService.CalculateParcelShippingCost(smallParcel);
 
         // Act
-        var parcelOrderCost = _sut.CalculateTotalOrderCost(parcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcels);
 
         // Assert
         Assert.NotNull(parcelOrderCost);
@@ -63,7 +63,7 @@ public class ParcelOrderCostCalculatorTests
     }
 
     [Fact]
-    public void CalculateTotalOrderCost_MultipleItemsParcelList_ShouldReturnTotalOrderCostAcrossAllParcels()
+    public void CalculateParcelOrder_MultipleItemsParcelList_ShouldReturnTotalOrderCostAcrossAllParcels()
     {
         // Arrange
         var allParcels = TestData.ParcelCostMappingTestData
@@ -75,7 +75,7 @@ public class ParcelOrderCostCalculatorTests
             .Sum(p => p.Cost);
 
         // Act
-        var parcelOrderCost = _sut.CalculateTotalOrderCost(allParcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(allParcels);
 
         // Assert
         Assert.NotNull(parcelOrderCost);

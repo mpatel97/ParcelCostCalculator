@@ -5,4 +5,6 @@ namespace ParcelCostCalculator.Services;
 public interface IParcelPricingService
 {
     public CostCalculatedParcel CalculateParcelShippingCost(Parcel parcel);
+
+    int CalculateTotalParcelOrderCost(IList<CostCalculatedParcel> costCalculatedParcels);
 }

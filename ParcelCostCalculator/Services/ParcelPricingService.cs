@@ -33,4 +33,11 @@ public class ParcelPricingService: IParcelPricingService
         var costCalculatedParcel = new CostCalculatedParcel(parcel, cost);
         return costCalculatedParcel;
     }
+
+    public int CalculateTotalParcelOrderCost(IList<CostCalculatedParcel> costCalculatedParcels)
+    {
+        ArgumentNullException.ThrowIfNull(costCalculatedParcels);
+
+        return costCalculatedParcels.Sum(p => p.Cost);
+    }
 }

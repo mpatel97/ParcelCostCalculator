@@ -14,7 +14,7 @@ public class ParcelOrderCostCalculator
         _parcelPricingService = parcelPricingService;
     }
 
-    public ParcelOrderCost CalculateTotalOrderCost(IEnumerable<Parcel> parcels)
+    public ParcelOrderCost CalculateParcelOrder(IEnumerable<Parcel> parcels)
     {
         ArgumentNullException.ThrowIfNull(parcels);
 
@@ -22,8 +22,7 @@ public class ParcelOrderCostCalculator
             .Select(_parcelPricingService.CalculateParcelShippingCost)
             .ToList(); // Materialize the list to avoid multiple enumerations
 
-        // Total cost is a simple sum, no need to split into seperate method for now
-        var totalCost = costCalculatedParcels.Sum(p => p.Cost);
+        var totalCost = _parcelPricingService.CalculateTotalParcelOrderCost(costCalculatedParcels);
 
         var parcelOrderCost = new ParcelOrderCost(costCalculatedParcels, totalCost);
         return parcelOrderCost;
