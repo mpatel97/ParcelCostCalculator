@@ -10,11 +10,11 @@ public class Parcel
 
     public required int Height { get; init; }
 
-    public Parcel(int length, int width, int hieght)
+    public Parcel(int length, int width, int height)
     {
         Length = length;
         Width = width;
-        Height = hieght;
+        Height = height;
     }
 
     public ParcelTypeEnum Type => ClassifyParcelType();
