@@ -1,0 +1,8 @@
+﻿using ParcelCostCalculator.Models;
+
+namespace ParcelCostCalculator.Services;
+
+public interface IParcelPricingService
+{
+    public CostCalculatedParcel CalculateParcelShippingCost(Parcel parcel);
+}
