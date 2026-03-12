@@ -106,4 +106,19 @@ public class ParcelPricingServiceTests
         // Assert
         Assert.Equal(expectedTotalCost, totalOrderCost);
     }
+
+    [Theory]
+    [InlineData(1, 2)]
+    [InlineData(2, 4)]
+    [InlineData(3, 6)]
+    [InlineData(25, 50)]
+    public void CalculateSpeedyShippingCost_TotalParcelOrderCost_ShouldReturnDoubleTheTotalCost(int totalParcelOrderCost, int expectedSpeedyShippingCost)
+    {
+        // Arrange
+        // Act
+        var speedyShippingCost = _sut.CalculateSpeedyShippingCost(totalParcelOrderCost);
+
+        // Assert
+        Assert.Equal(expectedSpeedyShippingCost, speedyShippingCost);
+    }
 }

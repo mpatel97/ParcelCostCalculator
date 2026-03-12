@@ -7,4 +7,6 @@ public interface IParcelPricingService
     public CostCalculatedParcel CalculateParcelShippingCost(Parcel parcel);
 
     int CalculateTotalParcelOrderCost(IList<CostCalculatedParcel> costCalculatedParcels);
+
+    int CalculateSpeedyShippingCost(int totalParcelOrderCost);
 }

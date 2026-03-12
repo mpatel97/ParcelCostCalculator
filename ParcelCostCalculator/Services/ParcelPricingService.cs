@@ -5,6 +5,8 @@ namespace ParcelCostCalculator.Services;
 
 public class ParcelPricingService: IParcelPricingService
 {
+    private const int SpeedyShippingMultiplier = 2;
+
     // Whole dollar amount mapping for each parcel type
     private static readonly Dictionary<ParcelTypeEnum, int> ParcelTypeCostMapping = new()
     {
@@ -39,5 +41,10 @@ public class ParcelPricingService: IParcelPricingService
         ArgumentNullException.ThrowIfNull(costCalculatedParcels);
 
         return costCalculatedParcels.Sum(p => p.Cost);
+    }
+
+    public int CalculateSpeedyShippingCost(int totalParcelOrderCost)
+    {
+        return totalParcelOrderCost * SpeedyShippingMultiplier;
     }
 }

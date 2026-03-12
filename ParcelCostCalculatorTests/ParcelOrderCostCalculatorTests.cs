@@ -36,9 +36,10 @@ public class ParcelOrderCostCalculatorTests
     {
         // Arrange
         var parcels = new List<Parcel>();
+        var parcelOrder = new ParcelOrder(parcels);
 
         // Act
-        var parcelOrderCost = _sut.CalculateParcelOrder(parcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcelOrder);
 
         // Assert
         Assert.NotNull(parcelOrderCost);
@@ -51,11 +52,12 @@ public class ParcelOrderCostCalculatorTests
         // Arrange
         var smallParcel = TestData.ParcelCostMappingTestData[ParcelTypeEnum.Small];
         var parcels = new List<Parcel> { smallParcel };
+        var parcelOrder = new ParcelOrder(parcels);
 
         var costCalculatedSmallParcel = _parcelPricingService.CalculateParcelShippingCost(smallParcel);
 
         // Act
-        var parcelOrderCost = _sut.CalculateParcelOrder(parcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcelOrder);
 
         // Assert
         Assert.NotNull(parcelOrderCost);
@@ -69,16 +71,43 @@ public class ParcelOrderCostCalculatorTests
         var allParcels = TestData.ParcelCostMappingTestData
             .Select(kvp => kvp.Value)
             .ToList();
+        var parcelOrder = new ParcelOrder(allParcels);
 
         var expectedTotalCost = allParcels
             .Select(_parcelPricingService.CalculateParcelShippingCost)
             .Sum(p => p.Cost);
 
         // Act
-        var parcelOrderCost = _sut.CalculateParcelOrder(allParcels);
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcelOrder);
 
         // Assert
         Assert.NotNull(parcelOrderCost);
         Assert.Equal(parcelOrderCost.TotalCost, expectedTotalCost);
+    }
+
+    [Fact]
+    public void CalculateParcelOrder_SpeedyShippingSelected_ShouldReturnDoubleTotalOrderCost()
+    {
+        // Arrange
+        var allParcels = TestData.ParcelCostMappingTestData
+            .Select(kvp => kvp.Value)
+            .ToList();
+
+        // Speedy shipping selected by user
+        var parcelOrder = new ParcelOrder(allParcels, true);
+
+        var expectedTotalCost = allParcels
+            .Select(_parcelPricingService.CalculateParcelShippingCost)
+            .Sum(p => p.Cost);
+
+        var expectedTotalCostWithSpeedyShipping = expectedTotalCost * 2;
+
+        // Act
+        var parcelOrderCost = _sut.CalculateParcelOrder(parcelOrder);
+
+        // Assert
+        Assert.NotNull(parcelOrderCost);
+        Assert.Equal(parcelOrderCost.TotalCost, expectedTotalCost);
+        Assert.Equal(parcelOrderCost.SpeedyShippingCost, expectedTotalCostWithSpeedyShipping);
     }
 }

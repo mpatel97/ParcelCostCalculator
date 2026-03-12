@@ -8,6 +8,8 @@ public class ParcelOrderCost
 
     public required int TotalCost { get; init; }
 
+    public int? SpeedyShippingCost { get; set; }
+
     [SetsRequiredMembers]
     public ParcelOrderCost(IList<CostCalculatedParcel> costCalculatedParcels, int totalCost)
     {

@@ -14,9 +14,11 @@ public class ParcelOrderCostCalculator
         _parcelPricingService = parcelPricingService;
     }
 
-    public ParcelOrderCost CalculateParcelOrder(IEnumerable<Parcel> parcels)
+    public ParcelOrderCost CalculateParcelOrder(ParcelOrder parcelOrder)
     {
-        ArgumentNullException.ThrowIfNull(parcels);
+        ArgumentNullException.ThrowIfNull(parcelOrder);
+
+        var parcels = parcelOrder.Parcels;
 
         var costCalculatedParcels = parcels
             .Select(_parcelPricingService.CalculateParcelShippingCost)
@@ -25,6 +27,19 @@ public class ParcelOrderCostCalculator
         var totalCost = _parcelPricingService.CalculateTotalParcelOrderCost(costCalculatedParcels);
 
         var parcelOrderCost = new ParcelOrderCost(costCalculatedParcels, totalCost);
+
+        ApplySpeedyShipping(parcelOrder, parcelOrderCost);
+
         return parcelOrderCost;
+    }
+
+    private void ApplySpeedyShipping(ParcelOrder parcelOrder, ParcelOrderCost parcelOrderCost)
+    {
+        if (parcelOrder.IsSpeedyShipping)
+        {
+            var speedyShipping = _parcelPricingService.CalculateSpeedyShippingCost(parcelOrderCost.TotalCost);
+
+            parcelOrderCost.SpeedyShippingCost = speedyShipping;
+        }
     }
 }
