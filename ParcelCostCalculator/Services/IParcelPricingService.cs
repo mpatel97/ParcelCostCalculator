@@ -9,4 +9,6 @@ public interface IParcelPricingService
     int CalculateTotalParcelOrderCost(IList<CostCalculatedParcel> costCalculatedParcels);
 
     int CalculateSpeedyShippingCost(int totalParcelOrderCost);
+
+    bool IsParcelOverWeightLimit(Parcel parcel, out int weightDifference);
 }

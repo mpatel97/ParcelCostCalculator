@@ -8,7 +8,7 @@ public class ParcelTypeMappingTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public void Constructor_InvalidLength_ShouldThrowArgumentOutOfRangeException(int length)
+    public void ParcelConstructor_InvalidLength_ShouldThrowArgumentOutOfRangeException(int length)
     {
         // Arrange
         // Act
@@ -21,7 +21,7 @@ public class ParcelTypeMappingTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public void Constructor_InvalidWidth_ShouldThrowArgumentOutOfRangeException(int width)
+    public void ParcelConstructor_InvalidWidth_ShouldThrowArgumentOutOfRangeException(int width)
     {
         // Arrange
         // Act
@@ -34,7 +34,7 @@ public class ParcelTypeMappingTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public void Constructor_InvalidHeight_ShouldThrowArgumentOutOfRangeException(int height)
+    public void ParcelConstructor_InvalidHeight_ShouldThrowArgumentOutOfRangeException(int height)
     {
         // Arrange
         // Act
@@ -42,6 +42,19 @@ public class ParcelTypeMappingTests
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Parcel(1, 1, height));
 
         Assert.Equal("height", ex.ParamName);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void WeightedParcelConstructor_InvalidWeight_ShouldThrowArgumentOutOfRangeException(int weight)
+    {
+        // Arrange
+        // Act
+        // Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new WeightedParcel(1, 1, 1, weight));
+
+        Assert.Equal("weight", ex.ParamName);
     }
 
     [Theory]

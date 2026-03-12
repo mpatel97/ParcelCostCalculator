@@ -30,13 +30,51 @@ public class ParcelPricingServiceTests
     [InlineData(ParcelTypeEnum.Medium, 8)]
     [InlineData(ParcelTypeEnum.Large, 15)]
     [InlineData(ParcelTypeEnum.ExtraLarge, 25)]
-    public void CalculateParcelShippingCost_ParcelType_ShouldCalculateCostForParcelType(ParcelTypeEnum parcelType, int expectedCost)
+    public void CalculateParcelShippingCost_GivenParcelType_ShouldCalculateCostForParcelType(ParcelTypeEnum parcelType, int expectedCost)
     {
         // Arrange
         var parcel = TestData.ParcelCostMappingTestData[parcelType];
 
         // Act
         var costCalculationParcel = _sut.CalculateParcelShippingCost(parcel);
+
+        // Assert
+        Assert.NotNull(costCalculationParcel);
+        Assert.Equal(expectedCost, costCalculationParcel.Cost);
+    }
+
+    [Theory]
+    [InlineData(ParcelTypeEnum.Small, 1, 3)]
+    [InlineData(ParcelTypeEnum.Medium, 3, 8)]
+    [InlineData(ParcelTypeEnum.Large, 6, 15)]
+    [InlineData(ParcelTypeEnum.ExtraLarge, 10, 25)]
+    public void CalculateParcelShippingCost_GivenWeightUnderParcelTypeLimit_ShouldCalculateCostForParcelTypeWithOverweightChargeApplied(ParcelTypeEnum parcelType, int weight, int expectedCost)
+    {
+        // Arrange
+        var parcel = TestData.ParcelCostMappingTestData[parcelType];
+        var weightedParcel = new WeightedParcel(parcel, weight);
+
+        // Act
+        var costCalculationParcel = _sut.CalculateParcelShippingCost(weightedParcel);
+
+        // Assert
+        Assert.NotNull(costCalculationParcel);
+        Assert.Equal(expectedCost, costCalculationParcel.Cost);
+    }
+
+    [Theory]
+    [InlineData(ParcelTypeEnum.Small, 2, 3+2)]
+    [InlineData(ParcelTypeEnum.Medium, 4, 8+2)]
+    [InlineData(ParcelTypeEnum.Large, 8, 15+2+2)] // over 2 units of weight limit, so 2 overweight charges applied
+    [InlineData(ParcelTypeEnum.ExtraLarge, 13, 25+2+2+2)] // over 3 units of weight limit, so 3 overweight charges applied
+    public void CalculateParcelShippingCost_GivenWeightOverParcelTypeLimit_ShouldCalculateCostForParcelTypeWithOverweightChargeApplied(ParcelTypeEnum parcelType, int weight, int expectedCost)
+    {
+        // Arrange
+        var parcel = TestData.ParcelCostMappingTestData[parcelType];
+        var weightedParcel = new WeightedParcel(parcel, weight);
+
+        // Act
+        var costCalculationParcel = _sut.CalculateParcelShippingCost(weightedParcel);
 
         // Assert
         Assert.NotNull(costCalculationParcel);
@@ -120,5 +158,35 @@ public class ParcelPricingServiceTests
 
         // Assert
         Assert.Equal(expectedSpeedyShippingCost, speedyShippingCost);
+    }
+
+    [Fact]
+    public void IsParcelOverWeightLimit_NullParcel_ShouldThrowNullArgumentException()
+    {
+        // Arrange
+        // Act
+        // Assert
+        var ex = Assert.Throws<ArgumentNullException>(() => _sut.IsParcelOverWeightLimit(null!, out var weightDifference));
+
+        Assert.Equal("parcel", ex.ParamName);
+    }
+
+    [Theory]
+    [InlineData(ParcelTypeEnum.Small, 2)]
+    [InlineData(ParcelTypeEnum.Medium, 4)]
+    [InlineData(ParcelTypeEnum.Large, 7)]
+    [InlineData(ParcelTypeEnum.ExtraLarge, 11)]
+    public void IsParcelOverWeightLimit_ParcelWeightLimitIsBreached_ShouldReturnTrue(ParcelTypeEnum parcelType, int parcelWeight)
+    {
+        // Arrange
+        var parcel = TestData.ParcelCostMappingTestData[parcelType];
+        var weightedParcel = new WeightedParcel(parcel, parcelWeight);
+
+        // Act
+        var isParcelOverWeightLimit = _sut.IsParcelOverWeightLimit(weightedParcel, out var weightDifference);
+
+        // Assert
+        Assert.True(isParcelOverWeightLimit);
+        Assert.Equal(1, weightDifference); // All inline data breaches the weight limit by 1 unit, so the expected weight difference is 1
     }
 }

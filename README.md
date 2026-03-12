@@ -11,7 +11,9 @@ This library provides functionality to compute shipping costs for parcels in a s
     - Large parcel: all dimensions < 100cm. Cost $15
     - XL parcel: any dimension >= 100cm. Cost $25 
 - Phase 2: Due to changing requirements, ParcelOrderCostCalculator now accepts a ParcelOrder object instead of a list of parcels, so that users can now select to have speedy deliver as part of their order option. Speedy delivery doubles the shipping cost and is displayed seperately in the output
+- Phase 3: Weight dimension added to parcel, with calculations being updated to support parcel over-weight changes
 
 ## Assumptions
 - Phase 1: At this stage, the calulations are straight-forward, so we're defining cost mapping within the calculation services (pricing service and order cost calculator)
 - Phase 2: Pricing is now getting a little more complex, so we're keeping the pricing domain logic strictly in PricingService
+- Phase 3: Opted to created a new WeightedParcel type that inherits from Parcel to not break existing tests

@@ -5,10 +5,19 @@ namespace ParcelCostCalculator.Models;
 
 public class Parcel
 {
+    /// <summary>
+    /// Length of the parcel in centimeters. Must be a positive integer.
+    /// </summary>
     public required int Length { get; init; }
 
+    /// <summary>
+    /// Width of the parcel in centimeters. Must be a positive integer.
+    /// </summary>
     public required int Width { get; init; }
 
+    /// <summary>
+    /// Height of the parcel in centimeters. Must be a positive integer.
+    /// </summary>
     public required int Height { get; init; }
 
     [SetsRequiredMembers]
